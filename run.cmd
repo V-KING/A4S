@@ -1,0 +1,1 @@
+java -jar A4S.jar
