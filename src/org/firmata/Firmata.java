@@ -417,24 +417,18 @@ public class Firmata {
 	private void storeI2CBytes(int numBytes) {
 		// TODO Auto-generated method stub
 		int numI2cData = numBytes / 2;
-		// 两个byte的data
-		//for (int i = 0; i <= 8; i++) {
-		//	System.out.println("[" + i + "]" + storedInputData[i]);
-		//}
 		int[] temp_14mergeTo1Byte = new int[16];// 14bits merge to 1bytes store in temp_14mergeTo1Byte
 		// 前面5个是分别是：cmd,地址(2bytes),register(2bytes),data1(2bytes),data2(2bytes),data3....
 		// data1加上data2合成一个byte数据
 		// 将14bit的数据合成一个byte，因为接收到的数据是是将byte转化成2个7bit的数据
 		for (int i = 0, j = 0; j < numBytes; i += 2, j++) {
 			temp_14mergeTo1Byte[j] = storedInputData[i + 5] + (storedInputData[i + 6] << 7);// (5,6)(5+2,6+2)
-			//System.out.println("temp_14mergeTo1Byte{" + j + "}" + temp_14mergeTo1Byte[j]);
 		}
 		
 		int addr = storedInputData[1] + (storedInputData[2]);
 		int register = storedInputData[3] + (storedInputData[4]);
 		for (int i = 0; i < numI2cData; i++) {
 			i2cInputData[i] = (temp_14mergeTo1Byte[i] << 8) + temp_14mergeTo1Byte[i + 1];
-			//System.out.println("lux:" + i2cInputData[i]);
 			I2cMessages msg = new I2cMessages();
 			msg.address = addr;
 			msg.register= register;
@@ -445,11 +439,6 @@ public class Firmata {
 			mapS_I2c.put(Integer.toString(36), msg);
 			System.out.println(mapS_I2c.get(Integer.toString(addr)).data[0]);
 		}
-		// int val1 = 0, val2 = 0;
-		// val1 = storedInputData[5] + (storedInputData[6] << 7);
-		// val2 = storedInputData[7] + (storedInputData[8] << 7);
-		// System.out.println("val1:" + val1);
-		// System.out.println("val2:" + val2);
 	}
 
 	public void processInput(int inputData) {
