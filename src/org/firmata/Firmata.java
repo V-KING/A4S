@@ -137,7 +137,7 @@ public class Firmata {
 	public int[] i2cInputData = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0 };
 		
-	public Map<String, I2cMessages> mapS_I2c = new HashMap<String,I2cMessages>();
+	public Map<String, I2cMessages> mapS_I2c = new HashMap<String,I2cMessages>();//String(key)存放slaveaddress,I2cMessage存放数据
 
 	private final int MAX_PINS = 128;
 
