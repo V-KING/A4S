@@ -90,7 +90,7 @@ public class A4S {
 			CommPort commPort = portIdentifier.open("sogworks.cn", 2000);
 			if (commPort instanceof SerialPort) {
 				serialPort = (SerialPort) commPort;
-				serialPort.setSerialPortParams(115200, SerialPort.DATABITS_8,
+				serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8,
 						SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
 				arduino = new Firmata(new FirmataWriter());
@@ -226,7 +226,10 @@ public class A4S {
 		} else if (cmd.equals("servoWrite")) {
 			arduino.servoWrite(Integer.parseInt(parts[1]),
 					Integer.parseInt(parts[2]));
-		} else if (cmd.equals("poll")) {
+		} else if (cmd.equals("digitalDisplay")) {
+			//TODO: add digital display
+			arduino.digitalDisplay(5);
+		}else if (cmd.equals("poll")) {
 			// set response to a collection of sensor, value pairs, one pair per
 			// line
 			// in this example there is only one sensor, "volume"
@@ -249,6 +252,9 @@ public class A4S {
 					response += "i2cRead"+"/" + arduino.mapS_I2c.get(Integer.toString(i)).address+ " " + arduino.mapS_I2c.get(Integer.toString(i)).data[0] + "\n";
 				}
 			}
+			//¶ÁÈ¡³¬Éù²¨
+			response += "ultrasonic" + " " + arduino.readUltrasonic()
+					+ "\n";
 		} else if (cmd.equals("servo")) {
 			for (int i = 0; i < parts.length; i++) {
 				System.out.println(parts[i]);

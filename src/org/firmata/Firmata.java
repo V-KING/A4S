@@ -123,7 +123,11 @@ public class Firmata {
 													// non-realtime messages
 	private final int SYSEX_REALTIME = 0x7F; // MIDI Reserved for realtime
 												// messages
-
+	
+	//自定义CMD
+	private final int ULTRASONIC_QUERY = 0x00; // 超声波数据
+	private final int ULTRASONIC_RESPONSE = 0x00; // 超声波数据
+	
 	int waitForData = 0;
 	int executeMultiByteCommand = 0;
 	int multiByteChannel = 0;
@@ -136,6 +140,8 @@ public class Firmata {
 	int[] analogInputData = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	public int[] i2cInputData = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			0 };
+	int ultrasonic = 0;
+	
 		
 	public Map<String, I2cMessages> mapS_I2c = new HashMap<String,I2cMessages>();//String(key)存放slaveaddress,I2cMessage存放数据
 
@@ -392,6 +398,9 @@ public class Firmata {
 		case I2C_REPLY:
 			storeI2CBytes(2);
 			break;
+		case ULTRASONIC_RESPONSE:
+			storeUltrasonic();
+			break;
 		case ANALOG_MAPPING_RESPONSE:
 			for (int pin = 0; pin < analogChannel.length; pin++)
 				analogChannel[pin] = 127;
@@ -407,6 +416,13 @@ public class Firmata {
 		}
 	}
 
+	private void storeUltrasonic() {
+		// TODO Auto-generated method stub
+		int value = storedInputData[1];
+		ultrasonic = value;
+		
+	}
+
 	/**
 	 * 将接收到的I2C数据存放到i2cInputData[]中
 	 * 
@@ -415,7 +431,6 @@ public class Firmata {
 	 * 
 	 */
 	private void storeI2CBytes(int numBytes) {
-		// TODO Auto-generated method stub
 		int numI2cData = numBytes / 2;
 		int[] temp_14mergeTo1Byte = new int[16];// 14bits merge to 1bytes store in temp_14mergeTo1Byte
 		// 前面5个是分别是：cmd,地址(2bytes),register(2bytes),data1(2bytes),data2(2bytes),data3....
@@ -494,5 +509,15 @@ public class Firmata {
 				break;
 			}
 		}
+	}
+
+	public int readUltrasonic() {
+		return ultrasonic;
+	}
+
+	public void digitalDisplay(int num) {
+		// TODO Auto-generated method stub
+		DigitalDisplay _digitalDisplay = new DigitalDisplay(this);
+		_digitalDisplay.display(num);
 	}
 }
